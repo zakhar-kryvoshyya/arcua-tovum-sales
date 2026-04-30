@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Облік продажів — Видавництво</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <div class="app-header">
+      <div>
+        <div class="app-title">Облік продажів</div>
+        <div class="app-subtitle">Видавництво · Книгарні</div>
+      </div>
+      <div id="tbadge" class="badge-count"></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="sw('entry')">Ввести звіт</button>
+      <button class="tab" onclick="sw('ship')">Відвантаження</button>
+      <button class="tab" onclick="sw('stock')">Залишки</button>
+      <button class="tab" onclick="sw('sales')">Продажі</button>
+      <button class="tab" onclick="sw('rep')">Звіти</button>
+    </div>
+
+    <!-- TAB: ENTRY -->
+    <div id="tab-entry" class="section active">
+      <div class="card">
+        <div class="card-title">Місячний звіт продажів</div>
+        <div class="grid3">
+          <div>
+            <label>Книгарня</label>
+            <select id="e-store"><option value="">— оберіть книгарню —</option></select>
+          </div>
+          <div>
+            <label>Рік</label>
+            <select id="e-year"></select>
+          </div>
+          <div>
+            <label>Місяць</label>
+            <select id="e-month">
+              <option value="1">Січень</option><option value="2">Лютий</option>
+              <option value="3">Березень</option><option value="4">Квітень</option>
+              <option value="5">Травень</option><option value="6">Червень</option>
+              <option value="7">Липень</option><option value="8">Серпень</option>
+              <option value="9">Вересень</option><option value="10">Жовтень</option>
+              <option value="11">Листопад</option><option value="12">Грудень</option>
+            </select>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="card-title" style="font-size:13px">Продажі за місяць</div>
+        <div class="row-header row-sale">
+          <div class="col-hdr">Товар</div>
+          <div class="col-hdr">К-сть</div>
+          <div class="col-hdr">Ціна ₴</div>
+          <div></div>
+        </div>
+        <div id="sale-rows"></div>
+        <button class="add-btn" onclick="addSaleRow()">+ додати рядок</button>
+        <div class="form-footer">
+          <div id="smsg" class="save-msg"></div>
+          <button class="btn" onclick="clrSale()">Очистити</button>
+          <button class="btn btn-primary" onclick="saveSale()">Зберегти звіт</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: SHIPMENT -->
+    <div id="tab-ship" class="section">
+      <div class="card">
+        <div class="card-title">Відвантаження / повернення</div>
+        <div class="grid4">
+          <div>
+            <label>Книгарня</label>
+            <select id="sh-store"><option value="">— оберіть книгарню —</option></select>
+          </div>
+          <div><label>Рік</label><select id="sh-year"></select></div>
+          <div>
+            <label>Місяць</label>
+            <select id="sh-month">
+              <option value="1">Січень</option><option value="2">Лютий</option>
+              <option value="3">Березень</option><option value="4">Квітень</option>
+              <option value="5">Травень</option><option value="6">Червень</option>
+              <option value="7">Липень</option><option value="8">Серпень</option>
+              <option value="9">Вересень</option><option value="10">Жовтень</option>
+              <option value="11">Листопад</option><option value="12">Грудень</option>
+            </select>
+          </div>
+          <div>
+            <label>Номер видаткової</label>
+            <input type="text" id="sh-invoice" placeholder="наприклад: ВН-0042">
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row-header row-ship">
+          <div class="col-hdr">Товар</div>
+          <div class="col-hdr">Дата</div>
+          <div class="col-hdr">Відвантаж.</div>
+          <div class="col-hdr">Ціна ₴</div>
+          <div class="col-hdr">Сума ₴</div>
+          <div class="col-hdr">Повернення</div>
+          <div class="col-hdr">Разом±</div>
+          <div></div>
+        </div>
+        <div id="ship-rows"></div>
+        <button class="add-btn" onclick="addShipRow()">+ додати рядок</button>
+        <div class="ship-total-row">
+          <span class="ship-total-label">Загальна сума відвантаження:</span>
+          <span id="ship-total-sum" class="ship-total-val">0 ₴</span>
+        </div>
+        <div class="form-footer">
+          <div id="shmsg" class="save-msg"></div>
+          <button class="btn" onclick="clrShip()">Очистити</button>
+          <button class="btn btn-primary" onclick="saveShip()">Зберегти</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: STOCK -->
+    <div id="tab-stock" class="section">
+      <div class="metrics grid4">
+        <div class="met"><div class="met-l">Відвантажено</div><div class="met-v" id="st-d">0</div></div>
+        <div class="met"><div class="met-l">Повернено</div><div class="met-v" id="st-r">0</div></div>
+        <div class="met"><div class="met-l">Продано</div><div class="met-v" id="st-s">0</div></div>
+        <div class="met"><div class="met-l">Залишок (факт)</div><div class="met-v" id="st-b">0</div></div>
+      </div>
+      <div class="card">
+        <div class="filter-row">
+          <select id="stfs" onchange="renderStock()"><option value="">Всі книгарні</option></select>
+          <select id="stfb" onchange="renderStock()"><option value="">Всі товари</option></select>
+        </div>
+        <div id="stwrap"></div>
+      </div>
+    </div>
+
+    <!-- TAB: SALES -->
+    <div id="tab-sales" class="section">
+      <div class="metrics grid4">
+        <div class="met"><div class="met-l">Всього продано</div><div class="met-v" id="ms">0</div></div>
+        <div class="met"><div class="met-l">Виручка (₴)</div><div class="met-v" id="mr">0</div></div>
+        <div class="met"><div class="met-l">Книгарень</div><div class="met-v" id="mst">0</div></div>
+        <div class="met"><div class="met-l">Назв книжок</div><div class="met-v" id="mb">0</div></div>
+      </div>
+      <div class="card">
+        <div class="filter-row">
+          <select id="fss" onchange="renderSales()"><option value="">Всі книгарні</option></select>
+          <select id="fsy" onchange="renderSales()"><option value="">Всі роки</option></select>
+          <select id="fsm" onchange="renderSales()">
+            <option value="">Всі місяці</option>
+            <option value="1">Січень</option><option value="2">Лютий</option>
+            <option value="3">Березень</option><option value="4">Квітень</option>
+            <option value="5">Травень</option><option value="6">Червень</option>
+            <option value="7">Липень</option><option value="8">Серпень</option>
+            <option value="9">Вересень</option><option value="10">Жовтень</option>
+            <option value="11">Листопад</option><option value="12">Грудень</option>
+          </select>
+          <select id="fsb" onchange="renderSales()"><option value="">Всі товари</option></select>
+        </div>
+        <div id="salwrap"></div>
+      </div>
+    </div>
+
+    <!-- TAB: REPORTS -->
+    <div id="tab-rep" class="section">
+      <div id="replist"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
