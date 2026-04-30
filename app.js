@@ -58,7 +58,7 @@ const MONTHS = [
 
 // ── Google Sheets налаштування ──────────────────────────────
 // Після розгортання Apps Script вставте URL сюди:
-const GOOGLE_SCRIPT_URL = '';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzaUPUYo-VoyFlsIZ10XeW4Anmu4j29Zl3_88qv1vhLLLWF2yJresJyRtvZm5FZIP8v/exec';
 // Приклад: 'https://script.google.com/macros/s/ABC.../exec'
 // Якщо порожньо — дані зберігаються лише локально (localStorage)
 // ────────────────────────────────────────────────────────────
