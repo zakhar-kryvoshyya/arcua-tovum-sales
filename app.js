@@ -58,7 +58,7 @@ const MONTHS = [
 
 // ── Google Sheets налаштування ──────────────────────────────
 // Після розгортання Apps Script вставте URL сюди:
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzaUPUYo-VoyFlsIZ10XeW4Anmu4j29Zl3_88qv1vhLLLWF2yJresJyRtvZm5FZIP8v/exec';
+const GOOGLE_SCRIPT_URL = '';
 // Приклад: 'https://script.google.com/macros/s/ABC.../exec'
 // Якщо порожньо — дані зберігаються лише локально (localStorage)
 // ────────────────────────────────────────────────────────────
@@ -581,22 +581,24 @@ async function delShipments(store, year, month) {
 
 // ── GOOGLE SHEETS SYNC ───────────────────────────────────────
 async function syncToSheets(type, rec) {
-  if (!GOOGLE_SCRIPT_URL) return; // URL не налаштовано — пропускаємо
+  if (!GOOGLE_SCRIPT_URL) {
+    console.warn('GOOGLE_SCRIPT_URL не налаштовано');
+    return;
+  }
 
   const payload = { type, ...rec };
+  console.log('Відправляємо в Sheets:', JSON.stringify(payload));
 
   try {
-    showSyncStatus('pending', 'Синхронізація...');
-    const res = await fetch(GOOGLE_SCRIPT_URL, {
+    await fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors', // потрібно для Apps Script
+      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    showSyncStatus('ok', '✓ Синхронізовано з Google Sheets');
+    console.log('Запит відправлено успішно');
   } catch (err) {
-    console.error('Sheets sync error:', err);
-    showSyncStatus('error', '⚠ Не вдалося синхронізувати');
+    console.error('Помилка відправки:', err);
   }
 }
 
